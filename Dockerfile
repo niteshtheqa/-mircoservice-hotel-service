@@ -48,4 +48,4 @@ RUN mvn clean package -Dmaven.test.skip=true
 EXPOSE 8082
 
 # Run the hotel service
-CMD ["java", "-jar", "target/hotel-service.jar"]
+CMD ["java", "-jar", "target/HotelService-0.0.1-SNAPSHOT.jar"]
