@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hotel-service
+      run: hotel-service
+  template:
+    metadata:
+      labels:
+        app: hotel-service
+        run: hotel-service
+    spec:
+      containers:
+      - name: hotel-service
+        image: nitesh2611/hotel-service:01  # Replace with the correct image for hotel-service
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi 
+        ports:
+        - containerPort: 8082  # Assuming hotel-service listens on port 8082, replace if needed
+
+      - name: postgres
+        image: postgres:13  # PostgreSQL 13 image
+        env:
+        - name: POSTGRES_DB
+          value: "hotel_db"  # Optional: create a default database for hotel-service
+        - name: POSTGRES_USER
+          value: "postgres"  # User for the hotel-service
+        - name: POSTGRES_PASSWORD
+          value: "admin123"  # Password for the user
+        ports:
+        - containerPort: 5432  # Default PostgreSQL port
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        volumeMounts:
+        - name: postgres-persistent-storage
+          mountPath: /var/lib/postgresql/data  # Persistent storage for PostgreSQL data
+      volumes:
+      - name: postgres-persistent-storage
+        emptyDir: {}  # Replace with PersistentVolumeClaim for persistent storage
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel-service
+spec:
+  selector:
+    app: hotel-service
+  ports:
+    - protocol: TCP
+      port: 8082  # Expose the port that the hotel-service container listens on
+      targetPort: 8082
+  type: LoadBalancer    
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel-service-postgres
+spec:
+  selector:
+    app: hotel-service
+  ports:
+    - protocol: TCP
+      port: 5432  # Expose the PostgreSQL service on port 5432
+      targetPort: 5432
+  type: ClusterIP  # PostgreSQL service within the cluster, no external exposure

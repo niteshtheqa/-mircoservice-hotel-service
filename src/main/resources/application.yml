@@ -5,13 +5,13 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://13.127.217.126:8761/eureka
+      defaultZone: http://192.168.49.2:30902/eureka
 server:
   port: 8082
 
 spring:
   datasource:
-    url: jdbc:postgresql://hotel-service-db.cto8iauaqiow.ap-south-1.rds.amazonaws.com:5432/hoteldb
+    url: jdbc:postgresql://127.0.01:5432/hotel_db
     username: postgres
     password: admin123
   jpa:
