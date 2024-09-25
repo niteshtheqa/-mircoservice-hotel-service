@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: hotel-service
-        image: nitesh2611/hotel-service:01  # Replace with the correct image for hotel-service
+        image: nitesh2611/hotel-service:02  # Replace with the correct image for hotel-service
         resources:
           limits:
             cpu: 200m
